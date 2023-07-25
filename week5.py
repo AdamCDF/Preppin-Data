@@ -3,7 +3,9 @@ import numpy as np
 
 # Input data
 
-df = pd.read_csv('Preppin Data\Inputs\PD 2023 Wk 1 Input.csv')
+df = pd.read_csv(
+    'C:\\Users\\Adam\\Documents\\GitHub\\Preppin Data\\Inputs\\PD 2023 Wk 1 Input.csv')
+
 
 # Create the bank code by splitting out off the letters from the Transaction code, call this field 'Bank'
 
@@ -38,8 +40,6 @@ df2['Bank'] = df2['Bank'].astype(str)
 df3 = df.merge(df2, on='Bank', how='left')
 
 df4 = df3.groupby(['Bank'], as_index=False)['rank'].mean()
-
-# print(df4)
 
 # The average transaction value per rank, call this field 'Avg Transaction Value per Rank'
 

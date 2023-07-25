@@ -3,14 +3,14 @@ import pandas as pd
 
 
 df = pd.read_csv(
-    'C:\\Users\\Adam\\Documents\\GitHub\\Embedding-tutorial\\Preppin Data\\Inputs\\PD 2023 Wk 1 Input.csv')
+    'C:\\Users\\Adam\\Documents\\GitHub\\Preppin Data\\Inputs\\PD 2023 Wk 1 Input.csv')
 df2 = pd.read_csv(
-    'C:\\Users\\Adam\\Documents\\GitHub\\Embedding-tutorial\\Preppin Data\\Inputs\\Targets.csv')
+    'C:\\Users\\Adam\\Documents\\GitHub\\Preppin Data\\Inputs\\Targets.csv')
 # print(df)
 # print(df2)
 
 # For the transactions file:
-# Filter the transactions to just look at DSB (help)
+# Filter the transactions to just look at DSB
 
 df['Transaction_Code'] = df['Transaction Code'].str.split('-', expand=True)[0]
 # df['Transaction Code'] = np.where(df['Transaction Code']
@@ -23,29 +23,29 @@ df.query("Transaction_Code == 'DSB'", inplace=True)
 df['Online or In-Person'] = np.where(df['Online or In-Person']
                                      == 1, 'Online', 'In-Person')
 
-# Change the date to be the quarter (help)
+# Change the date to be the quarter
 
 df['Transaction Date'] = pd.to_datetime(df['Transaction Date'])
 # df['Quarter'] = pd.PeriodIndex(df['Transaction Date'], freq='Q')
 df['Quarter'] = df['Transaction Date'].dt.quarter
 
-# Sum the transaction values for each quarter and for each Type of Transaction (Online or In-Person) (help)
+# Sum the transaction values for each quarter and for each Type of Transaction (Online or In-Person)
 
 df3 = df.groupby(['Online or In-Person', 'Quarter'],
                  as_index=False)['Value'].sum()
 
 
 # For the targets file:
-# Pivot the quarterly targets so we have a row for each Type of Transaction and each Quarter (help)
+# Pivot the quarterly targets so we have a row for each Type of Transaction and each Quarter
 
 df4 = pd.wide_to_long(df2, stubnames='Q', i=[
                       'Online or In-Person'], j='Quarter')
 # Rename the fields
-# Remove the 'Q' from the quarter field and make the data type numeric (help)
+# Remove the 'Q' from the quarter field and make the data type numeric
 
 df4 = df4.rename({'Q': 'Value'}, axis=1)
 
-# Join the two datasets together (help)
+# Join the two datasets together
 
 
 df5 = df4.merge(df3, how='inner', on='Online or In-Person')
@@ -60,12 +60,6 @@ print(df4)
 print(df5)
 # print(df6)
 
-# You may need more than one join clause!
-
 # df6 = df5.join(df2.set_index('Bank'), on='Bank')
 
 print('done')
-
-
-# Remove unnecessary fields
-# Calculate the Variance to Target for each row (help)
